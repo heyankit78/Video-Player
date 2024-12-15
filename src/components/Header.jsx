@@ -79,7 +79,7 @@ function showSuggestionQuery(){
   </button>
 </div>
 
-            {showSuggestion && (
+            {showSuggestion && searchTextQuery && (
             <div className='w-[44rem] z-30 absolute bg-white overflow-auto border border-gray-300 rounded-md mt-2 shadow-lg'>
                 {suggestionArray.map((suggestedElement, index) => (
                 <div key={index} className='flex items-center p-[5px] font-bold border-b border-gray-200 hover:bg-gray-100 cursor-pointer'>
