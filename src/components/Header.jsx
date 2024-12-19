@@ -3,12 +3,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toggleMenu } from '../utils/appSlice';
 // import { YOUTUBE_SEARCH_API } from '../utils/config';
 import { cacheResults } from '../utils/searchSlice';
+import { GOOGLE_API_KEY } from '../utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+const navigate = useNavigate();
 const dispatch = useDispatch();
 const [searchTextQuery,setSearchTextQuery] = useState("");
 const [suggestionArray,setSuggestionArray] = useState([]);
 const [showSuggestion,setShowSuggestion] = useState(false);
+const [searchVideoDetails,setSearchVideoDetails] = useState([]);
+
 
 const searchCache = useSelector((store)=>store.search)
 function toggleSidebar(){
@@ -28,8 +33,29 @@ useEffect(()=>{
         clearInterval(timer);
     }
 },[searchTextQuery])
+
+async function searchResults() {
+    // console.log("searchTextQuery-----", searchTextQuery);
+
+    try {
+      const data = await fetch(
+        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=${searchTextQuery}&type=video&key=${GOOGLE_API_KEY}`
+      );
+      const json = await data.json();
+    //   console.log("search json----------", json);
+      setSearchVideoDetails(json.items);  // Update state with fetched data
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  }
+  useEffect(() => {
+    if (searchVideoDetails.length > 0) {
+    //   console.log("searchVideoDetails----", searchVideoDetails);
+      navigate("/", { state: searchVideoDetails });  // Navigate with updated state
+    }
+  }, [searchVideoDetails]); 
 function showSuggestionQuery(){
-    {console.log("API CALL---",searchTextQuery)}
+    // {console.log("API CALL---",searchTextQuery)}
     const corsProxy = "https://cors-anywhere.herokuapp.com/";
     const apiUrl = `http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=${searchTextQuery}`;
     
@@ -50,7 +76,10 @@ function showSuggestionQuery(){
     <div className='grid grid-flow-col p-5 shadow-lg'>
         <div className='flex col-span-1'>
             <img onClick={toggleSidebar} className='h-8 cursor-pointer' alt="hamburger-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/640px-Hamburger_icon.svg.png"/>
+            
+            <div>
             <img className='h-8 mx-2 cursor-pointer' alt="youtube-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Logo_of_YouTube_%282015-2017%29.svg/2560px-Logo_of_YouTube_%282015-2017%29.svg.png"/>
+            </div>
         </div>
         <div className='col-span-10 px-10'>
            <div className='flex items-center'>
@@ -63,7 +92,7 @@ function showSuggestionQuery(){
     onBlur={()=>setShowSuggestion(false)}
     type="text"
   />
-  <button className='rounded-r-full border bg-slate-300 border-gray-400 py-[7px] px-2 flex items-center justify-center'>
+  <button onClick={searchResults} className='rounded-r-full border bg-slate-300 border-gray-400 py-[7px] px-2 flex items-center justify-center'>
     <svg 
       xmlns="http://www.w3.org/2000/svg" 
       fill="currentColor" 

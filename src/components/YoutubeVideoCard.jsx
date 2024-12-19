@@ -57,17 +57,21 @@ function formatYouTubeDuration(duration) {
 }
 
 const YoutubeVideoCard = ({ videoInfo }) => {
-    // console.log("videoInfo---------"+videoInfo);
   const { snippet, statistics, contentDetails } = videoInfo;
   const { channelTitle, title, thumbnails } = snippet;
+
+  // Optional chaining to ensure missing fields don't cause errors
+  const views = statistics?.viewCount;
+  const duration = contentDetails?.duration;
+  const publishedAt = snippet?.publishedAt;
 
   return (
     <div className='m-2 p-2 w-72 bg-white rounded-lg'>
       {/* Image and Video Duration */}
       <div className="relative">
-        <img alt="thumbnail" className='rounded-lg w-full' src={thumbnails.medium.url} />
+        <img alt="thumbnail" className='rounded-lg w-full' src={thumbnails?.medium?.url} />
         <div className='absolute right-2 top-2 bg-black text-white text-xs px-2 rounded-md'>
-          {formatYouTubeDuration(contentDetails.duration)}
+          {duration ? formatYouTubeDuration(duration) : "N/A"}
         </div>
       </div>
 
@@ -80,13 +84,13 @@ const YoutubeVideoCard = ({ videoInfo }) => {
       {/* Views and Time Ago */}
       <div className='flex items-center text-sm text-gray-600 mt-2'>
         {/* Views */}
-        <div>{formatViewCount(statistics.viewCount)} views</div>
+        <div>{views ? formatViewCount(views) : "N/A"} views</div>
 
         {/* Dot Separator */}
         <div className='mx-2'>•</div>
 
         {/* Time Ago */}
-        <div>{timeAgo(snippet.publishedAt)}</div>
+        <div>{publishedAt ? timeAgo(publishedAt) : "Unknown"}</div>
       </div>
     </div>
   );

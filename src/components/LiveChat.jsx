@@ -28,7 +28,7 @@ const LiveChat = () => {
     let offset = 0; // Keep track of pagination
 
     const intervalId = setInterval(() => {
-      console.log("API polling");
+    //   console.log("API polling");
 
       // Fetch API
       fetch(`https://pokeapi.co/api/v2/pokemon?limit=2&offset=${offset}`)

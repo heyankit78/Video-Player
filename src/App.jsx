@@ -1,42 +1,27 @@
+import { Provider } from 'react-redux';
+import { Routes, Route } from 'react-router-dom'; // Use Routes and Route
+import './App.css';
+import Body from './components/Body';
+import Header from './components/Header';
+import store from './utils/store';
+import Maincontainer from './components/Maincontainer';
+import WatchContainer from './components/WatchContainer';
 
-import { Provider } from 'react-redux'
-import {createBrowserRouter,RouterProvider} from 'react-router-dom'
-import './App.css'
-import Body from './components/Body'
-import Header from './components/Header'
-import './index.css'
-import store from './utils/store'
-import Maincontainer from './components/Maincontainer'
-import WatchContainer from './components/WatchContainer'
-
-const appRouter = createBrowserRouter([
-  {
-    path:"/",
-    element:<Body/>,
-    children:[
-      {
-        path:"/",
-        element:<Maincontainer/>
-      },
-      {
-        path:"/watch",
-        element:<WatchContainer/>
-      }
-    ]
-  }
-])
 function App() {
-
   return (
-    <>
     <Provider store={store}>
-      <div className=''>
-        <Header/>
-        <RouterProvider router={appRouter}/>
+      <div>
+        <Header />
+        <Routes> {/* Use Routes for defining routes */}
+          <Route path="/" element={<Body />}>
+            <Route index element={<Maincontainer />} /> {/* Default home path */}
+            <Route path="/main" element={<Maincontainer />} /> {/* /main path */}
+            <Route path="/watch" element={<WatchContainer />} /> {/* watch path */}
+          </Route>
+        </Routes>
       </div>
     </Provider>
-    </>
-  )
+  );
 }
 
-export default App
+export default App;

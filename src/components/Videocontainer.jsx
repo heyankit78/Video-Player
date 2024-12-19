@@ -3,7 +3,9 @@ import { YOUTUBE_VIDEOS_API } from '../utils/config';
 import YoutubeVideoCard from './YoutubeVideoCard';
 import { Link } from 'react-router-dom';
 
-const Videocontainer = () => {
+const Videocontainer = ({searchVideoDetails}) => {
+  // const location = useLocation();
+  // const searchVideoDetails = location.state;
 const [videoDetails,setVideoDetails] = useState([]);
   useEffect(() => {
     fetchVideos();
@@ -23,16 +25,30 @@ const [videoDetails,setVideoDetails] = useState([]);
       console.error("Failed to fetch videos:", error.message);
     }
   };
+  console.log("searchVideoDetails-----",searchVideoDetails);
+  const videosToDisplay = Array.isArray(searchVideoDetails) && searchVideoDetails.length > 0
+  ? searchVideoDetails
+  : videoDetails;
 
+ 
+  
   return (
     <div className='flex p-2 m-2 flex-wrap'>
-        {videoDetails.map((video)=>{
-            return (
-                <Link key={video.id} to={"/watch?v="+video.id}><YoutubeVideoCard videoInfo={video}/></Link>
-               
-            )
-        })}
-      
+      {searchVideoDetails.length ? (
+        videosToDisplay.map((video) => (
+          <Link key={video.id.videoId} to={"/watch?v=" + video.id.videoId}>
+            <YoutubeVideoCard videoInfo={video} />
+          </Link>
+        ))
+      ) : (
+        videosToDisplay.map((video) => (
+          <Link key={video.id} to={"/watch?v=" + video.id}>
+            <YoutubeVideoCard videoInfo={video} />
+          </Link>
+        ))
+      )}
+
+     
     </div>
   );
 };
