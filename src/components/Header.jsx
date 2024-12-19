@@ -4,7 +4,7 @@ import { toggleMenu } from '../utils/appSlice';
 // import { YOUTUBE_SEARCH_API } from '../utils/config';
 import { cacheResults } from '../utils/searchSlice';
 import { GOOGLE_API_KEY } from '../utils/config';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
 const navigate = useNavigate();
@@ -77,9 +77,11 @@ function showSuggestionQuery(){
         <div className='flex col-span-1'>
             <img onClick={toggleSidebar} className='h-8 cursor-pointer' alt="hamburger-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/640px-Hamburger_icon.svg.png"/>
             
+            <Link  to="/">
             <div>
             <img className='h-8 mx-2 cursor-pointer' alt="youtube-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Logo_of_YouTube_%282015-2017%29.svg/2560px-Logo_of_YouTube_%282015-2017%29.svg.png"/>
             </div>
+            </Link>
         </div>
         <div className='col-span-10 px-10'>
            <div className='flex items-center'>
